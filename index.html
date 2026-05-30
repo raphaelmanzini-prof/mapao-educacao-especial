@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">A
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mapão — Educação Especial — E.E. Dr. Álvaro Guião — 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
@@ -1730,7 +1730,7 @@ function render() {
       </div>
 
       <div class="tabs">
-        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()">${lb}</button>`;}).join('')}
+        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','docs:📂 Documentação','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()">${lb}</button>`;}).join('')}
       </div>
 
       ${editMode?'<div class="edit-banner">✏️ <strong>Modo edição ativo</strong> — Clique em qualquer campo para editar. Clique no 📝 para abrir o painel de histórico. Tudo salva automaticamente.</div>':''}
@@ -1749,6 +1749,9 @@ function render() {
       </div>
       <div class="tab-content ${activeTab==='resumo'?'active':''}">
         ${renderResumo()}
+      </div>
+      <div class="tab-content ${activeTab==='docs'?'active':''}">
+        ${renderDocs()}
       </div>
     </div>
 
@@ -1834,6 +1837,89 @@ function renderAux(f) {
       </div></div>
     `).join('')}</div>`;
 }
+
+function renderDocs() {
+  var modelos = [
+    {icon:'📝',title:'Estudo de Caso',desc:'Modelo anual de estudo de caso do estudante PAEE',url:'https://docs.google.com/document/d/1lTBKiEo8ZwaBl5TWOZbwFqxzSuhb4uA0/edit?usp=drive_link&ouid=100434113960140974359&rtpof=true&sd=true',color:'var(--accent)'},
+    {icon:'📋',title:'Plano de Atendimento Educacional Especializado (PAEE)',desc:'Modelo bimestral do plano de AEE',url:'https://docs.google.com/document/d/1lIVVJEn3TfdrJTI_FzKcWzUC0IOcj4mU/edit?usp=drive_link&ouid=100434113960140974359&rtpof=true&sd=true',color:'var(--tea)'},
+    {icon:'📊',title:'Plano Educacional Individualizado (PEI)',desc:'Modelo bimestral do PEI — responsabilidade do professor regente',url:'https://docs.google.com/document/d/1N6aDEzLtzEPfarGUWdThPo-CY-Biqlz0/edit?usp=drive_link&ouid=100434113960140974359&rtpof=true&sd=true',color:'var(--di)'},
+    {icon:'👨‍👩‍👧',title:'Relatório de Acolhimento Inicial e Bimestral com a Família',desc:'Modelo de acolhimento e retorno bimestral aos pais/responsáveis',url:'https://docs.google.com/document/d/1FR8tGnZK228OLrWZSVW55DhjcdJEQcBm/edit?usp=drive_link&ouid=100434113960140974359&rtpof=true&sd=true',color:'var(--df)'}
+  ];
+  var orientadores = [
+    {parte:'Parte 1',title:'Implementação da Política de Educação Especial e Resolução SEDUC nº 129/2025',url:'https://drive.google.com/file/d/1tKAYRtM8WSXB4ytXBd7kQAbae82j8cHI/view?usp=sharing'},
+    {parte:'Parte 2',title:'Atendimento Educacional Especializado — AEE — Parte 1',url:'https://drive.google.com/file/d/1v7bWx8voK5yJbidwUVZZXa7EsCmqTTmg/view?usp=sharing'},
+    {parte:'Parte 3',title:'Atendimento Educacional Especializado — AEE — Parte 2',url:'https://drive.google.com/file/d/1ClrbfWBdUpWdsVFHRXxZuok4I0RoRNpc/view?usp=sharing'},
+    {parte:'Parte 4',title:'Dos papéis e responsabilidades',url:'https://drive.google.com/file/d/11wNVVMHrTLNqH2L4tA31r6csweLKGMXN/view?usp=sharing'},
+    {parte:'Parte 5',title:'Das comissões de Recursos Pedagógicos, Acessibilidade e Tecnologia Assistiva',url:'https://drive.google.com/file/d/1onS5MS5TGKYXARyk0xuoCy6p7Ju-0GSv/view?usp=sharing'}
+  ];
+  var videos = [
+    {n:1,title:'Abertura + Diálogo sobre a Resolução SEDUC nº 129/2025',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152261'},
+    {n:2,title:'AEE em Sala de Recursos Multifuncionais ou Modalidade Itinerante',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152262'},
+    {n:3,title:'Projeto Ensino Colaborativo — AEE Expandido',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152263'},
+    {n:4,title:'Diálogo sobre a Resolução — Estudo de Caso',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152264'},
+    {n:5,title:'Diálogo sobre a Resolução — Plano de Atendimento (PAEE)',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152265'},
+    {n:6,title:'Diálogo sobre a Resolução — Plano Educacional Individualizado (PEI)',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152266'},
+    {n:7,title:'Diálogo sobre a Resolução — Relatório de Acolhimento e Retorno Bimestral',url:'https://repositorio.educacao.sp.gov.br/videoPlay?id=152267'}
+  ];
+
+  var modelosHtml = modelos.map(function(d) {
+    return '<a href="'+d.url+'" target="_blank" style="text-decoration:none">' +
+      '<div class="card" style="border-left:4px solid '+d.color+';cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'none\'">' +
+      '<div style="padding:16px">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">' +
+      '<span style="font-size:24px">'+d.icon+'</span>' +
+      '<div style="font-weight:700;font-size:14px;color:var(--ink)">'+d.title+'</div></div>' +
+      '<div style="font-size:12px;color:var(--ink-soft)">'+d.desc+'</div>' +
+      '<div style="margin-top:10px;font-size:12px;font-weight:600;color:'+d.color+'">Abrir e baixar modelo ↗</div>' +
+      '</div></div></a>';
+  }).join('');
+
+  var orientadoresHtml = orientadores.map(function(d) {
+    return '<a href="'+d.url+'" target="_blank" style="text-decoration:none;display:block;padding:14px 18px;border-bottom:1px solid rgba(0,0,0,0.05);transition:background 0.15s;color:var(--ink)" onmouseover="this.style.background=\'var(--accent-light)\'" onmouseout="this.style.background=\'transparent\'">' +
+      '<div style="display:flex;align-items:center;gap:12px">' +
+      '<span class="badge b-aee" style="min-width:60px;text-align:center">'+d.parte+'</span>' +
+      '<span style="font-size:14px;font-weight:500">'+d.title+'</span>' +
+      '<span style="margin-left:auto;font-size:12px;color:var(--accent);font-weight:600">Abrir ↗</span>' +
+      '</div></a>';
+  }).join('');
+
+  var videosHtml = videos.map(function(d) {
+    return '<a href="'+d.url+'" target="_blank" style="text-decoration:none;display:block;padding:12px 18px;border-bottom:1px solid rgba(0,0,0,0.05);transition:background 0.15s;color:var(--ink)" onmouseover="this.style.background=\'var(--accent-light)\'" onmouseout="this.style.background=\'transparent\'">' +
+      '<div style="display:flex;align-items:center;gap:12px">' +
+      '<span style="width:32px;height:32px;border-radius:8px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0">'+d.n+'</span>' +
+      '<span style="font-size:13px;font-weight:500">'+d.title+'</span>' +
+      '<span style="margin-left:auto;font-size:18px;flex-shrink:0">▶️</span>' +
+      '</div></a>';
+  }).join('');
+
+  return '<div class="section-title"><h2>📂 Documentação — Dossiê Pedagógico do Estudante</h2></div>' +
+    '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:20px">Modelos de documentos, orientações oficiais e vídeos formativos para a Educação Especial — Resolução SEDUC nº 129/2025.</p>' +
+
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.04)">' +
+    '<h3 style="font-family:Playfair Display,serif;font-size:1.1rem;margin-bottom:12px;color:var(--accent-dark)">📋 Quem faz a Documentação?</h3>' +
+    '<div style="overflow-x:auto"><table><thead><tr><th>Documentação</th><th>Profissional Responsável</th><th>Periodicidade</th></tr></thead><tbody>' +
+    '<tr><td>Estudo de Caso</td><td>Professor Especializado</td><td class="col-center">Anual</td></tr>' +
+    '<tr><td>Plano de Atendimento Educacional Especializado (PAEE)</td><td>Professor Especializado</td><td class="col-center">Bimestral</td></tr>' +
+    '<tr><td>Plano Educacional Individualizado (PEI)</td><td>Professor Regente</td><td class="col-center">Bimestral</td></tr>' +
+    '<tr><td>Relatório de Acolhimento</td><td>Professor Especializado</td><td class="col-center">Início das aulas</td></tr>' +
+    '<tr><td>Orientação e Retorno Bimestral aos Pais/Responsáveis</td><td>Professor Especializado</td><td class="col-center">Bimestral</td></tr>' +
+    '</tbody></table></div></div>' +
+
+    '<div class="section-title"><h2>📄 Modelos de Documentos — 2026</h2></div>' +
+    '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Clique para abrir o modelo no Google Docs.</p>' +
+    '<div style="background:#ffebee;border:1px solid #ef9a9a;border-radius:var(--radius);padding:10px 16px;margin-bottom:14px;font-size:13px;color:#b71c1c">🚫 <strong>NÃO edite o modelo original!</strong> Baixe o documento no seu computador (Arquivo → Fazer download) e edite a cópia baixada. O modelo deve permanecer em branco para uso de todos.</div>' +
+    '<div class="card-grid" style="margin-bottom:24px">' + modelosHtml + '</div>' +
+
+    '<div class="section-title"><h2>📚 Documentos Orientadores — Resolução SEDUC nº 129/2025</h2></div>' +
+    '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Material oficial da Secretaria da Educação do Estado de São Paulo.</p>' +
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:24px;border:1px solid rgba(0,0,0,0.04)">' + orientadoresHtml + '</div>' +
+
+    '<div class="section-title"><h2>🎬 Vídeos Formativos — Lives SEDUC</h2></div>' +
+    '<div style="background:var(--oj-bg);border:1px solid var(--oj-border);border-radius:var(--radius);padding:10px 16px;margin-bottom:14px;font-size:13px;color:#5d4037">' +
+    '⚠️ <strong>Atenção:</strong> O servidor deverá estar logado no <strong>CMSP Repositório</strong> para conseguir acesso aos vídeos.</div>' +
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;border:1px solid rgba(0,0,0,0.04)">' + videosHtml + '</div>';
+}
+
 
 function renderColab(f) {
   const profs = [
