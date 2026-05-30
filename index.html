@@ -1939,10 +1939,8 @@ function renderColab(f) {
     ${profs.map(p => {
       const als = f.filter(p.filter);
       if (!als.length) return '';
-      const turmas = {};
-      als.forEach(a => { if(!turmas[a.turma]) turmas[a.turma]=[]; turmas[a.turma].push(a); });
       return `
-        <div style="margin-bottom:20px">
+        <div style="margin-bottom:24px">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
             <div style="width:40px;height:40px;border-radius:10px;background:${p.bg};display:flex;align-items:center;justify-content:center;font-size:18px">${p.icon}</div>
             <div>
@@ -1950,31 +1948,26 @@ function renderColab(f) {
               <div style="font-size:12px;color:var(--ink-soft)">${p.segmento} · ${als.length} aluno${als.length>1?'s':''}</div>
             </div>
           </div>
-          ${Object.entries(turmas).map(([turma, tAls]) => `
-            <div class="turma-group">
-              <div class="turma-header">
-                <span style="font-weight:700;font-size:14px;color:var(--accent-dark)">${turma}</span>
-                <span class="badge b-cnt">${tAls.length}</span>
-              </div>
-              <div style="overflow-x:auto">
-                <table><thead><tr>
-                  <th style="width:35px">Nº</th><th>Nome</th><th>RA</th><th>Deficiência</th><th>Prof. Aux.</th><th>OJ</th><th style="width:35px">📝</th>
-                </tr></thead><tbody>
-                ${tAls.map((a,i) => `
-                  <tr class="${a.oj?'oj-row':''}">
-                    <td class="col-num">${i+1}</td>
-                    <td style="font-weight:500"><span style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px" onclick="openDetail(${a.id})">${a.n}</span></td>
-                    <td style="font-family:monospace;font-size:12px;color:var(--ink-soft)">${a.ra}</td>
-                    <td>${defBadges(a.def)}</td>
-                    <td style="font-size:12px">${a.profAux!=='—'?a.profAux:'<span style="color:#ccc">—</span>'}</td>
-                    <td class="col-center">${a.oj?'<span class="badge b-oj">OJ</span>':''}</td>
-                    <td class="col-center"><span class="note-icon ${(a.obs||a.historico.length)?'has-notes':''}" onclick="openDetail(${a.id})">${(a.obs||a.historico.length)?'📝':'📄'}</span></td>
-                  </tr>
-                `).join('')}
-                </tbody></table>
-              </div>
+          <div class="turma-group">
+            <div style="overflow-x:auto">
+              <table><thead><tr>
+                <th style="width:35px">Nº</th><th>Nome</th><th>RA</th><th>Turma</th><th>Deficiência</th><th>Prof. Aux.</th><th>OJ</th><th style="width:35px">📝</th>
+              </tr></thead><tbody>
+              ${als.map((a,i) => `
+                <tr class="${a.oj?'oj-row':''}">
+                  <td class="col-num">${i+1}</td>
+                  <td style="font-weight:500"><span style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px" onclick="openDetail(${a.id})">${a.n}</span></td>
+                  <td style="font-family:monospace;font-size:12px;color:var(--ink-soft)">${a.ra}</td>
+                  <td class="col-center"><span class="badge b-cnt">${a.turma}</span></td>
+                  <td>${defBadges(a.def)}</td>
+                  <td style="font-size:12px">${a.profAux!=='—'?a.profAux:'<span style="color:#ccc">—</span>'}</td>
+                  <td class="col-center">${a.oj?'<span class="badge b-oj">OJ</span>':''}</td>
+                  <td class="col-center"><span class="note-icon ${(a.obs||a.historico.length)?'has-notes':''}" onclick="openDetail(${a.id})">${(a.obs||a.historico.length)?'📝':'📄'}</span></td>
+                </tr>
+              `).join('')}
+              </tbody></table>
             </div>
-          `).join('')}
+          </div>
         </div>`;
     }).join('')}`;
 }
