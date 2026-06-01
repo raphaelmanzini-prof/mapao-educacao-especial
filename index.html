@@ -351,10 +351,10 @@ const INITIAL = [
     "turma": "1ª C",
     "def": "Autista Infantil",
     "etapa": "EM",
-    "aee": "TG",
-    "profAee": "Ana Carolina Pilla",
-    "diasAee": "Seg e Qui",
-    "horAee": "12h40–15h10",
+    "aee": "—",
+    "profAee": "—",
+    "diasAee": "—",
+    "horAee": "—",
     "profAux": "—",
     "profColab": "Raphael / Ana Júlia",
     "oj": false,
@@ -571,7 +571,7 @@ const INITIAL = [
     "profAee": "Allan",
     "diasAee": "Ter e Sex",
     "horAee": "12h40–15h10",
-    "profAux": "—",
+    "profAux": "Natali Dias de O. Baldan",
     "profColab": "Raphael / Ana Júlia",
     "oj": false,
     "obs": "",
@@ -639,10 +639,10 @@ const INITIAL = [
     "turma": "2ª B",
     "def": "Autista Infantil",
     "etapa": "EM",
-    "aee": "TF",
-    "profAee": "Ana Júlia",
-    "diasAee": "Ter e Qui",
-    "horAee": "12h40–15h10",
+    "aee": "—",
+    "profAee": "—",
+    "diasAee": "—",
+    "horAee": "—",
     "profAux": "Natali Dias de O. Baldan",
     "profColab": "Raphael / Ana Júlia",
     "oj": false,
@@ -741,6 +741,24 @@ const INITIAL = [
     "pasta": "https://drive.google.com/drive/folders/1h3fBV5daXSjq2TqxbRINZhGavkkn-4rz"
   },
   {
+    "id": 83,
+    "n": "Leticia Tahira Luz",
+    "ra": "111946767",
+    "turma": "2ª D",
+    "def": "Baixa Visão",
+    "etapa": "EM",
+    "aee": "—",
+    "profAee": "—",
+    "diasAee": "—",
+    "horAee": "—",
+    "profAux": "—",
+    "profColab": "Raphael / Ana Júlia",
+    "oj": false,
+    "obs": "",
+    "historico": [],
+    "pasta": "https://drive.google.com/drive/folders/1dRcZrkEZkkFclG6mRWkqoPRmGO4PoNXY?usp=drive_link"
+  },
+  {
     "id": 28,
     "n": "Ryan Emanoel Silva de Lima",
     "ra": "112879704",
@@ -793,6 +811,24 @@ const INITIAL = [
     "obs": "",
     "historico": [],
     "pasta": "https://drive.google.com/drive/folders/1aQIuzauBWTN0fersBk5kgoBh0ewx2Drw"
+  },
+  {
+    "id": 84,
+    "n": "Heloisa Pratavieira Antoniazzi",
+    "ra": "111631650",
+    "turma": "2ª F",
+    "def": "Autista Infantil",
+    "etapa": "EM",
+    "aee": "—",
+    "profAee": "—",
+    "diasAee": "—",
+    "horAee": "—",
+    "profAux": "—",
+    "profColab": "Raphael / Ana Júlia",
+    "oj": false,
+    "obs": "",
+    "historico": [],
+    "pasta": "https://drive.google.com/drive/folders/1ZalJ1Ulxj28-PJLUtWxxUcv89cxQeTin?usp=drive_link"
   },
   {
     "id": 31,
@@ -1497,6 +1533,24 @@ const INITIAL = [
     "pasta": "https://drive.google.com/drive/folders/1emi-UmPBtaxdZuPBAjcP9FBYnday3Ry6"
   },
   {
+    "id": 85,
+    "n": "Otavio Marcos Pomponio Vieira",
+    "ra": "113885594",
+    "turma": "8° B",
+    "def": "Autista Infantil",
+    "etapa": "EF",
+    "aee": "—",
+    "profAee": "—",
+    "diasAee": "—",
+    "horAee": "—",
+    "profAux": "Natália Cristine de Francisco",
+    "profColab": "Ana Claudia",
+    "oj": true,
+    "obs": "",
+    "historico": [],
+    "pasta": "https://drive.google.com/drive/folders/181SsJ2LmyCT3x_MFZules6Gj1mskj20O?usp=drive_link"
+  },
+  {
     "id": 70,
     "n": "Cassio Roberth Craveiro Cavaletto",
     "ra": "113200355",
@@ -1807,7 +1861,7 @@ function render() {
     <div class="container">
       <div class="search-bar">
         <span>🔍</span>
-        <input value="${search}" oninput="search=this.value;render()" placeholder="Buscar aluno por nome, RA, turma, deficiência...">
+        <input id="searchBox" value="${search}" oninput="search=this.value;render()" placeholder="Buscar aluno por nome, RA, turma, deficiência...">
         ${search?`<span class="search-count">${f.length} de ${data.length}</span>`:''}
       </div>
 
@@ -1842,6 +1896,7 @@ function render() {
       ${detailId ? renderDetail(data.find(a=>a.id===detailId)) : ''}
     </div>
   `;
+  if(search) { setTimeout(function(){ var sb=document.getElementById('searchBox'); if(sb){sb.focus();sb.setSelectionRange(sb.value.length,sb.value.length);} },10); }
 }
 
 function renderMapao(em, ef) {
@@ -2116,10 +2171,10 @@ function renderResumo() {
         ${[['Raphael Manzini','TA, TB'],['Ana Júlia','IC, TC, TF'],['Ana Carolina Pilla','TG, TH'],['Ana Claudia','IA, IB'],['Allan','TE']].map(([p,s])=>`<div class="resumo-row"><span class="rl">${p}</span><span class="rv" style="font-size:12px">${s}</span></div>`).join('')}
       </div>
       <div class="resumo-card"><h3>Totais</h3>
-        <div class="resumo-row"><span class="rl">Prof. Auxiliares</span><span class="rv">7</span></div>
+        <div class="resumo-row"><span class="rl">Prof. Auxiliares</span><span class="rv">8</span></div>
         <div class="resumo-row"><span class="rl">Ensino Colaborativo</span><span class="rv">4</span></div>
         <div class="resumo-row"><span class="rl">AEE</span><span class="rv">5</span></div>
-        <div class="resumo-total"><span>Total (sem repetição)</span><span>12</span></div>
+        <div class="resumo-total"><span>Total (sem repetição)</span><span>13</span></div>
         <p style="font-size:11px;color:#999;font-style:italic;margin-top:8px">4 atuam em dupla função</p>
       </div>
     </div>`;
