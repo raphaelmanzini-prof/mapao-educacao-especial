@@ -1131,7 +1131,7 @@ const INITIAL = [
     "horAee": "09h30–12h00",
     "profAux": "Gabrieli dos S. Catoia",
     "profColab": "Ana Carolina Pilla",
-    "oj": false,
+    "oj": true,
     "obs": "",
     "historico": [],
     "pasta": "https://drive.google.com/drive/folders/1jZ45xPc3JlsshJOXsUArIzL4eYUe4GJh"
@@ -1203,7 +1203,7 @@ const INITIAL = [
     "horAee": "—",
     "profAux": "Gabrieli dos S. Catoia",
     "profColab": "Ana Carolina Pilla",
-    "oj": false,
+    "oj": true,
     "obs": "",
     "historico": [],
     "pasta": "https://drive.google.com/drive/folders/10VroXewIyLNpHY9tpoh769IuI1L4AY1D"
@@ -1866,7 +1866,7 @@ function render() {
       </div>
 
       <div class="tabs">
-        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','docs:📂 Documentação','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()">${lb}</button>`;}).join('')}
+        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega PEI','docs:📂 Documentação','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()">${lb}</button>`;}).join('')}
       </div>
 
       ${editMode?'<div class="edit-banner">✏️ <strong>Modo edição ativo</strong> — Clique em qualquer campo para editar. Clique no 📝 para abrir o painel de histórico. Tudo salva automaticamente.</div>':''}
@@ -1885,6 +1885,9 @@ function render() {
       </div>
       <div class="tab-content ${activeTab==='resumo'?'active':''}">
         ${renderResumo()}
+      </div>
+      <div class="tab-content ${activeTab==='pei'?'active':''}">
+        ${renderPei()}
       </div>
       <div class="tab-content ${activeTab==='docs'?'active':''}">
         ${renderDocs()}
@@ -1973,6 +1976,27 @@ function renderAux(f) {
         ${d.als.map(a=>`<div class="card-row"><span style="cursor:pointer" onclick="openDetail(${a.id})">${a.oj?'⚖️ ':''}${a.n}</span><span>${defBadges(a.def)}${a.oj?'<span class="badge b-oj">OJ</span>':''}</span></div>`).join('')}
       </div></div>
     `).join('')}</div>`;
+}
+
+function renderPei() {
+  return '<div class="section-title"><h2>📝 Entrega de PEI — Plano Educacional Individualizado</h2></div>' +
+    '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:20px">O Plano Educacional Individualizado (PEI) é um documento elaborado pelo <strong>professor regente</strong> com periodicidade <strong>bimestral</strong>, conforme a Resolução SEDUC nº 129/2025.</p>' +
+
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 20px rgba(26,26,46,0.08);padding:28px;margin-bottom:24px;border:1px solid rgba(0,0,0,0.04);text-align:center">' +
+    '<div style="font-size:48px;margin-bottom:12px">📋</div>' +
+    '<h3 style="font-family:Playfair Display,serif;font-size:1.3rem;color:var(--accent-dark);margin-bottom:8px">Formulário de Entrega do PEI</h3>' +
+    '<p style="font-size:14px;color:var(--ink-soft);margin-bottom:20px;max-width:500px;margin-left:auto;margin-right:auto">Clique no botão abaixo para acessar o formulário de entrega do Plano Educacional Individualizado. Preencha com atenção todos os campos solicitados.</p>' +
+    '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdZKNeNpifL6O0eLsURf0SovLSqqx_hiIcHG0nJPWP5gEvMrg/viewform?usp=publish-editor" target="_blank" style="display:inline-block;background:var(--accent);color:white;padding:12px 32px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(45,90,142,0.3);transition:all 0.2s" onmouseover="this.style.background=\'var(--accent-dark)\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.background=\'var(--accent)\';this.style.transform=\'none\'">Abrir Formulário de Entrega ↗</a>' +
+    '<p style="font-size:12px;color:var(--ink-muted);margin-top:16px">O formulário abrirá em uma nova aba no Google Forms</p>' +
+    '</div>' +
+
+    '<div style="background:var(--oj-bg);border:1px solid var(--oj-border);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;font-size:13px;color:#5d4037">' +
+    '⚠️ <strong>Atenção:</strong> O PEI deve ser entregue <strong>bimestralmente</strong> pelo professor regente de cada disciplina para todos os alunos PAEE de suas turmas.</div>' +
+
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;border:1px solid rgba(0,0,0,0.04)">' +
+    '<h3 style="font-family:Playfair Display,serif;font-size:1rem;color:var(--accent-dark);margin-bottom:12px">📌 Orientações</h3>' +
+    '<p style="font-size:13px;color:var(--ink-soft);line-height:1.8"><em>Em breve serão adicionadas orientações detalhadas sobre o preenchimento e entrega do PEI.</em></p>' +
+    '</div>';
 }
 
 function renderDocs() {
