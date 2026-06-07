@@ -1868,7 +1868,7 @@ function render() {
       </div>
 
       <div class="tabs">
-        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega PEI','docs:📂 Documentação','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
+        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega PEI','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
       </div>
 
       ${editMode?'<div class="edit-banner">✏️ <strong>Modo edição ativo</strong> — Clique em qualquer campo para editar. Clique no 📝 para abrir o painel de histórico. Tudo salva automaticamente.</div>':''}
@@ -1884,6 +1884,9 @@ function render() {
       </div>
       <div class="tab-content ${activeTab==='aux'?'active':''}">
         ${renderAux(f)}
+      </div>
+      <div class="tab-content ${activeTab==='agenda'?'active':''}">
+        ${renderAgenda()}
       </div>
       <div class="tab-content ${activeTab==='resumo'?'active':''}">
         ${renderResumo()}
@@ -2101,6 +2104,17 @@ function renderPei() {
     '</div>' +
     '<div style="padding:12px 20px;background:#f5f5f5;font-size:11px;color:var(--ink-muted)">' +
     '⚠️ O servidor deverá estar logado na plataforma AVA-EFAPE para acessar os vídeos.</div>' +
+    '</div>';
+}
+
+function renderAgenda() {
+  return '<div class="section-title"><h2>📆 Agenda SEDUC — Educação Especial</h2></div>' +
+    '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px">Calendário oficial da SEDUC com datas importantes, prazos e eventos da Educação Especial.</p>' +
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;border:1px solid rgba(0,0,0,0.04)">' +
+    '<iframe src="https://calendar.google.com/calendar/embed?src=c_5390d489b47221e4f0d08d7b8e24381a07dc0d4bd910c2feafcbc8164e9a1df7%40group.calendar.google.com&ctz=America%2FSao_Paulo&wkst=1&bgcolor=%23ffffff&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0" style="border:none;width:100%;height:600px;border-radius:var(--radius)" frameborder="0" scrolling="no"></iframe>' +
+    '</div>' +
+    '<div style="text-align:center;margin-top:12px">' +
+    '<a href="https://calendar.google.com/calendar/u/0?cid=Y181MzkwZDQ4OWI0NzIyMWU0ZjBkMDhkN2I4ZTI0MzgxYTA3ZGMwZDRiZDkxMGMyZmVhZmNiYzgxNjRlOWExZGY3QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" target="_blank" style="font-size:13px;color:var(--accent);font-weight:600;text-decoration:none">➕ Adicionar esta agenda ao seu Google Calendar ↗</a>' +
     '</div>';
 }
 
