@@ -1985,6 +1985,14 @@ function renderAux(f) {
     }).join('')}</div>`;
 }
 
+function buildEfapeItem(num, title, date, url, color, synopsis) {
+  return '<a href="'+url+'" target="_blank" style="text-decoration:none;display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid rgba(0,0,0,0.05);transition:background 0.15s;color:var(--ink)" onmouseover="this.style.background=\'#f5f5f5\'" onmouseout="this.style.background=\'transparent\'">' +
+    '<span style="width:32px;height:32px;border-radius:50%;background:'+color+';color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px">'+num+'</span>' +
+    '<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">'+title+'</div><div style="font-size:11px;color:var(--ink-muted);margin-top:2px">📅 '+date+'</div>' +
+    (synopsis ? '<div style="font-size:12px;color:var(--ink-soft);margin-top:6px;line-height:1.6;border-left:2px solid '+color+';padding-left:10px">'+synopsis+'</div>' : '') +
+    '</div><span style="font-size:14px;flex-shrink:0;margin-top:2px">▶️</span></a>';
+}
+
 function renderPei() {
   return '<div style="background:linear-gradient(135deg,#e65100,#ff8f00);border-radius:var(--radius);padding:24px 20px;margin-bottom:24px;color:white;text-align:center">' +
     '<div style="font-size:48px;margin-bottom:8px">📝</div>' +
@@ -1994,6 +2002,29 @@ function renderPei() {
 
     '<div style="background:#fff3e0;border:2px solid #ff9800;border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:14px;color:#e65100">' +
     '📢 <strong>Prezado(a) professor(a),</strong> para realizar a entrega oficial do PEI do seu aluno Público-Alvo da Educação Especial (PAEE), siga rigorosamente as etapas abaixo.</div>' +
+
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;margin-bottom:24px;border:1px solid rgba(0,0,0,0.04)">' +
+    '<h3 style="font-family:Playfair Display,serif;font-size:1rem;color:var(--accent-dark);margin-bottom:14px">📅 Calendário de Bimestres — 2026</h3>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">' +
+
+    '<div style="padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent)">' +
+    '<div style="font-weight:700;font-size:13px;color:var(--accent-dark)">1º Bimestre</div>' +
+    '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">02/02 a 22/04</div></div>' +
+
+    '<div style="padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent)">' +
+    '<div style="font-weight:700;font-size:13px;color:var(--accent-dark)">2º Bimestre</div>' +
+    '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">23/04 a 06/07</div></div>' +
+
+    '<div style="padding:12px 14px;background:#ffebee;border-radius:8px;border-left:3px solid #c62828">' +
+    '<div style="font-weight:700;font-size:13px;color:#c62828">3º Bimestre</div>' +
+    '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">24/07 a 02/10</div>' +
+    '<div style="font-size:11px;color:#c62828;font-weight:700;margin-top:6px;padding:4px 8px;background:#ffcdd2;border-radius:4px">🚨 Data de entrega do PEI — Replanejamento Escolar<br>Quinta-feira, 23 de julho</div></div>' +
+
+    '<div style="padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent)">' +
+    '<div style="font-weight:700;font-size:13px;color:var(--accent-dark)">4º Bimestre</div>' +
+    '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">05/10 a 18/12</div></div>' +
+
+    '</div></div>' +
 
     '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 20px rgba(26,26,46,0.08);overflow:hidden;margin-bottom:20px;border:1px solid rgba(0,0,0,0.04)">' +
 
@@ -2049,7 +2080,28 @@ function renderPei() {
     '<div style="padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent)"><div style="font-weight:700;font-size:13px;color:var(--accent-dark)">📘 Ana Julia Alves</div><div style="font-size:12px;color:var(--ink-soft);font-weight:600;margin-top:2px">1ª–3ª série do Ensino Médio</div><div style="font-size:11px;color:var(--ink-muted);margin-top:6px;line-height:1.7">Seg — 09h30 às 12h00 / 15h10 às 17h40<br>Qua — 11h10 às 12h00 / 15h10 às 17h40</div></div>' +
     '<div style="padding:12px 14px;background:var(--tea-light);border-radius:8px;border-left:3px solid var(--tea)"><div style="font-weight:700;font-size:13px;color:var(--tea)">📗 Ana Carolina Pilla Capellato</div><div style="font-size:12px;color:var(--ink-soft);font-weight:600;margin-top:2px">6º–7º ano do Ensino Fundamental II</div><div style="font-size:11px;color:var(--ink-muted);margin-top:6px;line-height:1.7">Seg — 15h10 às 16h50<br>Qui — 15h10 às 16h50</div></div>' +
     '<div style="padding:12px 14px;background:var(--tea-light);border-radius:8px;border-left:3px solid var(--tea)"><div style="font-weight:700;font-size:13px;color:var(--tea)">📗 Ana Claudia Squassoni Cezar</div><div style="font-size:12px;color:var(--ink-soft);font-weight:600;margin-top:2px">8º–9º ano do Ensino Fundamental II</div><div style="font-size:11px;color:var(--ink-muted);margin-top:6px;line-height:1.7">Seg — 15h30 às 17h10<br>Ter — 15h10 às 16h50<br>Qui — 15h10 às 16h50</div></div>' +
-    '</div></div>';
+    '</div></div>' +
+
+    '<div style="background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-top:20px;border:1px solid rgba(0,0,0,0.04)">' +
+    '<div style="padding:16px 20px;background:linear-gradient(135deg,#1a237e,#283593);color:white">' +
+    '<h3 style="font-family:Playfair Display,serif;font-size:1.1rem;margin-bottom:4px">🎓 Formações EFAPE 2026 — Cronograma</h3>' +
+    '<p style="font-size:12px;opacity:0.85">Vídeos interativos disponíveis na plataforma AVA-EFAPE</p>' +
+    '</div>' +
+    '<div style="padding:0">' +
+    buildEfapeItem('1','Resolução SEDUC 129/2025','Semana 9 de fevereiro','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=53112','#4caf50','Apresentação da nova resolução que regulamenta a Educação Especial na rede estadual de São Paulo, abordando as principais mudanças, diretrizes e responsabilidades dos profissionais.') +
+    buildEfapeItem('2','Planejamento de Aula, Estrutura 2026','Semana 9 de fevereiro','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=53186','#4caf50','Orientações sobre como estruturar o planejamento de aula considerando a inclusão dos alunos PAEE, com foco nas adaptações curriculares e estratégias pedagógicas diferenciadas.') +
+    buildEfapeItem('3','Plano Educacional Individualizado – PEI','Semana 23 de fevereiro','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=53614','#e65100','Formação sobre a elaboração do PEI: o que é, quem elabora, qual a periodicidade, como definir objetivos, conteúdos e estratégias individualizadas para cada estudante PAEE.') +
+    buildEfapeItem('4','A prática do Plano Educacional Individualizado – PEI','Semana 11 de maio','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=64115','#e65100','Aprofundamento prático sobre o PEI: como aplicar no dia a dia da sala de aula, registrar avanços, realizar ajustes e articular com o professor especializado.') +
+    buildEfapeItem('5','Um dia normal... Será? – Parte 1','Semana 6 de abril','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=60238','#7b1fa2','Reflexão sobre a rotina escolar sob a perspectiva da inclusão, abordando situações do cotidiano e como promover a participação efetiva de todos os estudantes.') +
+    buildEfapeItem('6','Os números racionais no cotidiano','Semana de março','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=56902','#1976d2','Exemplo prático de aula inclusiva na área de Matemática, demonstrando como adaptar o conteúdo de números racionais para alunos com diferentes necessidades educacionais.') +
+    buildEfapeItem('7','Problemas do cotidiano com equações do 1º e 2º grau','Semana 16 de março','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=57756','#1976d2','Continuidade da formação em Matemática inclusiva, com estratégias para trabalhar resolução de problemas e equações de forma acessível a todos os estudantes.') +
+    buildEfapeItem('8','Português – Anos Iniciais, Carta','Semana 23 de março','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=58844','#1976d2','Modelo de aula inclusiva em Língua Portuguesa, utilizando o gênero textual carta como ferramenta para desenvolver habilidades de leitura e escrita com adaptações para alunos PAEE.') +
+    buildEfapeItem('9','Romantismo no Brasil – José de Alencar','Semana 27 de abril','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=61785','#7b1fa2','Exemplo de aula inclusiva em Literatura, demonstrando adaptações curriculares para o ensino do Romantismo brasileiro com acessibilidade para estudantes PAEE.') +
+    buildEfapeItem('10','Ciências – Nosso corpo – Parte 1','Semana 4 de maio','https://avaefape.educacao.sp.gov.br/mod/interactivevideo/view.php?id=63170','#7b1fa2','Aula modelo de Ciências sobre o corpo humano com estratégias inclusivas, utilizando recursos visuais, concretos e multissensoriais para garantir a aprendizagem de todos.') +
+    '</div>' +
+    '<div style="padding:12px 20px;background:#f5f5f5;font-size:11px;color:var(--ink-muted)">' +
+    '⚠️ O servidor deverá estar logado na plataforma AVA-EFAPE para acessar os vídeos.</div>' +
+    '</div>';
 }
 
 function renderDocs() {
