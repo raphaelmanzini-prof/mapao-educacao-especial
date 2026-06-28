@@ -148,6 +148,39 @@ td { padding:6px 10px; vertical-align:middle; }
   transition:opacity 0.3s;
 }
 .detail-overlay.open { opacity:1; pointer-events:auto; }
+/* Stat card clickable + stat modal */
+.stat-card-click { cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; }
+.stat-card-click:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(26,61,102,0.18); }
+.stat-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1100;
+  display:flex; align-items:center; justify-content:center; padding:16px;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+.stat-modal-overlay.open { opacity:1; pointer-events:auto; }
+.stat-modal {
+  background:var(--surface); border-radius:14px; width:min(560px,100%);
+  max-height:85vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  transform:scale(0.96); transition:transform 0.25s;
+}
+.stat-modal-overlay.open .stat-modal { transform:scale(1); }
+.stat-modal-head {
+  padding:18px 22px; background:linear-gradient(135deg,#1a3d66,#2d5a8e);
+  color:#fff; border-radius:14px 14px 0 0; position:sticky; top:0; z-index:2;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.stat-modal-head h3 { font-size:17px; font-weight:700; margin:0; }
+.stat-modal-head .sm-count { font-size:13px; opacity:0.85; margin-top:2px; }
+.stat-modal-close { background:rgba(255,255,255,0.2); border:none; color:#fff; width:32px; height:32px; border-radius:8px; font-size:18px; cursor:pointer; line-height:1; }
+.stat-modal-close:hover { background:rgba(255,255,255,0.35); }
+.stat-modal-body { padding:12px 18px 20px; }
+.sm-row { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; cursor:pointer; transition:background 0.12s; }
+.sm-row:hover { background:var(--accent-light); }
+.sm-row:not(:last-child) { border-bottom:1px solid rgba(0,0,0,0.05); }
+.sm-row .sm-name { font-weight:600; font-size:14px; color:var(--ink); }
+.sm-row .sm-meta { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+.sm-group-title { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-muted); font-weight:700; margin:14px 4px 4px; }
+.sm-row.sm-static { cursor:default; }
+.sm-row.sm-static:hover { background:transparent; }
 .detail-header {
   padding:20px; background:linear-gradient(135deg,#1a3d66,#2d5a8e);
   color:white; position:sticky; top:0; z-index:1;
@@ -2127,6 +2160,7 @@ let search = '';
 let detailId = null;
 let editMode = false;
 let editingCell = null;
+let statModal = null;
 
 const KEY = 'mapao_ed_especial_2026';
 function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); toast('💾 Salvo!'); } catch(e) { toast('❌ Erro ao salvar'); } }
@@ -2189,7 +2223,7 @@ function render() {
     </div></header>
 
     <div class="stats-bar"><div class="stats-grid">
-      ${[{n:stats.total,l:'Alunos PAEE'},{n:stats.em,l:'Ensino Médio'},{n:stats.ef,l:'Ens. Fundamental'},{n:stats.aee,l:'Com AEE'},{n:stats.colab,l:'Ens. Colaborativo'},{n:stats.aux,l:'Prof. Auxiliares'},{n:stats.interp,l:'Intérprete Libras'},{n:stats.oj,l:'Ordens Judiciais'}].map(s=>`<div class="stat-card"><div class="stat-num">${s.n}</div><div class="stat-lbl">${s.l}</div></div>`).join('')}
+      ${[{n:stats.total,l:'Alunos PAEE',k:'total'},{n:stats.em,l:'Ensino Médio',k:'em'},{n:stats.ef,l:'Ens. Fundamental',k:'ef'},{n:stats.aee,l:'Com AEE',k:'aee'},{n:stats.colab,l:'Ens. Colaborativo',k:'colab'},{n:stats.aux,l:'Prof. Auxiliares',k:'aux'},{n:stats.interp,l:'Intérprete Libras',k:'interp'},{n:stats.oj,l:'Ordens Judiciais',k:'oj'}].map(s=>`<div class="stat-card stat-card-click" onclick="openStatModal('${s.k}')" title="Clique para ver a lista"><div class="stat-num">${s.n}</div><div class="stat-lbl">${s.l}</div></div>`).join('')}
     </div></div>
 
     <div class="container">
@@ -2234,6 +2268,12 @@ function render() {
     <div class="detail-overlay ${detailId?'open':''}" onclick="closeDetail()"></div>
     <div class="detail-panel ${detailId?'open':''}">
       ${detailId ? renderDetail(data.find(a=>a.id===detailId)) : ''}
+    </div>
+
+    <div class="stat-modal-overlay ${statModal?'open':''}" onclick="closeStatModal()">
+      <div class="stat-modal" onclick="event.stopPropagation()">
+        ${statModal ? renderStatModal(statModal) : ''}
+      </div>
     </div>
   `;
   if(search) { setTimeout(function(){ var sb=document.getElementById('searchBox'); if(sb){sb.focus();sb.setSelectionRange(sb.value.length,sb.value.length);} },10); }
@@ -2768,6 +2808,94 @@ function toggleEdit() { editMode=!editMode; render(); }
 function toggleOJ(id) { const a=data.find(x=>x.id===id); a.oj=!a.oj; save(); render(); }
 function openDetail(id) { detailId=id; render(); }
 function closeDetail() { detailId=null; render(); }
+
+function openStatModal(key) { statModal=key; render(); }
+function closeStatModal() { statModal=null; render(); }
+function openStudentFromStat(id) { statModal=null; detailId=id; render(); }
+
+function renderStatModal(key) {
+  const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const etapaLbl = e => e==='EM' ? 'Ensino Médio' : 'Ensino Fundamental';
+
+  // Listas de alunos por categoria
+  const studentConfigs = {
+    total: { title:'Alunos PAEE', filter:a=>true, meta:a=>`${a.turma} · ${a.def}` },
+    em:    { title:'Ensino Médio', filter:a=>a.etapa==='EM', meta:a=>`${a.turma} · ${a.def}` },
+    ef:    { title:'Ensino Fundamental', filter:a=>a.etapa==='EF', meta:a=>`${a.turma} · ${a.def}` },
+    aee:   { title:'Alunos com AEE', filter:a=>a.aee!=='—', meta:a=>`${a.turma} · Turma ${a.aee} · ${a.profAee}` },
+    colab: { title:'Ensino Colaborativo', filter:a=>a.aee==='—', meta:a=>`${a.turma} · ${a.profColab!=='—'?a.profColab:'—'}` },
+    oj:    { title:'Ordens Judiciais', filter:a=>a.oj, meta:a=>`${a.turma} · ${a.def}` },
+  };
+
+  if (studentConfigs[key]) {
+    const cfg = studentConfigs[key];
+    const list = data.filter(cfg.filter).sort((x,y)=> x.n.localeCompare(y.n,'pt'));
+    const rows = list.map(a => `
+      <div class="sm-row" onclick="openStudentFromStat(${a.id})">
+        <div style="flex:1;min-width:0">
+          <div class="sm-name">${esc(a.n)}</div>
+          <div class="sm-meta">${esc(cfg.meta(a))}</div>
+        </div>
+        <span style="color:var(--ink-muted);font-size:16px">›</span>
+      </div>`).join('');
+    return `
+      <div class="stat-modal-head">
+        <div><h3>${cfg.title}</h3><div class="sm-count">${list.length} ${list.length===1?'registro':'registros'}</div></div>
+        <button class="stat-modal-close" onclick="closeStatModal()">×</button>
+      </div>
+      <div class="stat-modal-body">${rows || '<div style="padding:20px;text-align:center;color:var(--ink-muted)">Nenhum registro.</div>'}</div>`;
+  }
+
+  // Profissionais auxiliares (agrupado por profissional -> alunos)
+  if (key === 'aux') {
+    const auxAlunos = data.filter(a=>a.profAux!=='—' && a.profAuxTipo!=='Tradutora e Intérprete de Libras');
+    const groups = {};
+    auxAlunos.forEach(a => { (groups[a.profAux]=groups[a.profAux]||[]).push(a); });
+    const names = Object.keys(groups).sort((x,y)=>x.localeCompare(y,'pt'));
+    const body = names.map(nm => `
+      <div class="sm-group-title">👩‍🏫 ${esc(nm)}</div>
+      ${groups[nm].sort((x,y)=>x.n.localeCompare(y.n,'pt')).map(a=>`
+        <div class="sm-row" onclick="openStudentFromStat(${a.id})">
+          <div style="flex:1;min-width:0">
+            <div class="sm-name">${esc(a.n)}</div>
+            <div class="sm-meta">${esc(a.turma)} · ${esc(a.def)}</div>
+          </div>
+          <span style="color:var(--ink-muted);font-size:16px">›</span>
+        </div>`).join('')}`).join('');
+    return `
+      <div class="stat-modal-head">
+        <div><h3>Professoras Auxiliares</h3><div class="sm-count">${names.length} profissionais · ${auxAlunos.length} alunos</div></div>
+        <button class="stat-modal-close" onclick="closeStatModal()">×</button>
+      </div>
+      <div class="stat-modal-body">${body}</div>`;
+  }
+
+  // Intérprete de Libras
+  if (key === 'interp') {
+    const interpAlunos = data.filter(a=>a.profAuxTipo==='Tradutora e Intérprete de Libras');
+    const groups = {};
+    interpAlunos.forEach(a => { (groups[a.profAux]=groups[a.profAux]||[]).push(a); });
+    const names = Object.keys(groups).sort((x,y)=>x.localeCompare(y,'pt'));
+    const body = names.map(nm => `
+      <div class="sm-group-title">🤟 ${esc(nm)}</div>
+      ${groups[nm].sort((x,y)=>x.n.localeCompare(y.n,'pt')).map(a=>`
+        <div class="sm-row" onclick="openStudentFromStat(${a.id})">
+          <div style="flex:1;min-width:0">
+            <div class="sm-name">${esc(a.n)}</div>
+            <div class="sm-meta">${esc(a.turma)} · ${esc(a.def)}</div>
+          </div>
+          <span style="color:var(--ink-muted);font-size:16px">›</span>
+        </div>`).join('')}`).join('');
+    return `
+      <div class="stat-modal-head">
+        <div><h3>Intérprete de Libras</h3><div class="sm-count">${names.length} profissional · ${interpAlunos.length} alunos</div></div>
+        <button class="stat-modal-close" onclick="closeStatModal()">×</button>
+      </div>
+      <div class="stat-modal-body">${body || '<div style="padding:20px;text-align:center;color:var(--ink-muted)">Nenhum registro.</div>'}</div>`;
+  }
+
+  return '';
+}
 
 function startEdit(id, field) {
   if (!editMode) return;
