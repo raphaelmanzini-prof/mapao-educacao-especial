@@ -2212,7 +2212,7 @@ function render() {
       </div>
 
       <div class="tabs">
-        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega PEI','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
+        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega do PEI e Relatórios','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
       </div>
 
       ${editMode?'<div class="edit-banner">✏️ <strong>Modo edição ativo</strong> — Clique em qualquer campo para editar. Clique no 📝 para abrir o painel de histórico. Tudo salva automaticamente.</div>':''}
@@ -2349,8 +2349,8 @@ function buildEfapeItem(num, title, date, url, color, synopsis) {
 function renderPei() {
   return '<div style="background:linear-gradient(135deg,#e65100,#ff8f00);border-radius:var(--radius);padding:24px 20px;margin-bottom:24px;color:white;text-align:center">' +
     '<div style="font-size:48px;margin-bottom:8px">📝</div>' +
-    '<h2 style="font-family:Playfair Display,serif;font-size:1.6rem;font-weight:800;margin-bottom:4px;text-shadow:0 2px 4px rgba(0,0,0,0.2)">Entrega de PEI</h2>' +
-    '<p style="font-size:14px;opacity:0.9">Plano Educacional Individualizado — Resolução SEDUC nº 129/2025</p>' +
+    '<h2 style="font-family:Playfair Display,serif;font-size:1.6rem;font-weight:800;margin-bottom:4px;text-shadow:0 2px 4px rgba(0,0,0,0.2)">Entrega do PEI e Relatório</h2>' +
+    '<p style="font-size:14px;opacity:0.9">Plano Educacional Individualizado (PEI) e do Relatório Final (sobre o desenvolvimento do aluno no bimestre) — Resolução SEDUC nº 129/2025</p>' +
     '</div>' +
 
     '<div style="background:#fff3e0;border:2px solid #ff9800;border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:14px;color:#e65100">' +
@@ -2371,11 +2371,13 @@ function renderPei() {
     '<div style="padding:12px 14px;background:#ffebee;border-radius:8px;border-left:3px solid #c62828">' +
     '<div style="font-weight:700;font-size:13px;color:#c62828">3º Bimestre</div>' +
     '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">24/07 a 16/10</div>' +
-    '<div style="font-size:11px;color:#c62828;font-weight:700;margin-top:6px;padding:4px 8px;background:#ffcdd2;border-radius:4px">🚨 Data de entrega do PEI<br>Sexta-feira, 31 de julho</div></div>' +
+    '<div style="font-size:11px;color:#c62828;font-weight:700;margin-top:6px;padding:4px 8px;background:#ffcdd2;border-radius:4px">🚨 Data de entrega do PEI<br>Sexta-feira, 31 de julho</div>' +
+    '<div style="font-size:11px;color:#c62828;font-weight:700;margin-top:6px;padding:4px 8px;background:#ffcdd2;border-radius:4px">🚨 Data de entrega do Relatório do 3º Bimestre<br>Segunda-feira, 5 de outubro</div></div>' +
 
     '<div style="padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent)">' +
     '<div style="font-weight:700;font-size:13px;color:var(--accent-dark)">4º Bimestre</div>' +
-    '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">19/10 a 18/12</div></div>' +
+    '<div style="font-size:12px;color:var(--ink-soft);margin-top:2px">19/10 a 18/12</div>' +
+    '<div style="font-size:11px;color:#c62828;font-weight:700;margin-top:6px;padding:4px 8px;background:#ffcdd2;border-radius:4px">🚨 Data de entrega do Relatório do 4º Bimestre<br>Sexta-feira, 4 de dezembro</div></div>' +
 
     '</div></div>' +
 
@@ -2387,8 +2389,12 @@ function renderPei() {
     '<div style="font-size:13px;color:var(--ink-soft);margin-top:4px">Clique no botão abaixo para baixar o modelo padrão de PEI adotado pela escola. Preencha <strong>todos os campos</strong> com o planejamento, objetivos e adaptações curriculares do estudante.</div></div>' +
     '</div>' +
     '<div style="padding:16px 20px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:center">' +
-    '<a href="https://docs.google.com/document/d/1-TDFl-V57hQu2AIjc6Bld72IeivLQUbt/edit?usp=drive_link&ouid=110437982876466561904&rtpof=true&sd=true" target="_blank" style="display:inline-block;background:#4caf50;color:white;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 3px 10px rgba(76,175,80,0.3);transition:all 0.2s" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'none\'">📄 Baixar Modelo do PEI ↗</a>' +
+    '<a href="https://docs.google.com/document/d/1-TDFl-V57hQu2AIjc6Bld72IeivLQUbt/edit?usp=drive_link&ouid=110437982876466561904&rtpof=true&sd=true" target="_blank" style="display:inline-block;background:#4caf50;color:white;padding:16px 36px;border-radius:10px;font-size:17px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(76,175,80,0.35);transition:all 0.2s" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'none\'">📄 Baixar Modelo do PEI ↗</a>' +
     '<div style="font-size:11px;color:#c62828;font-weight:600;margin-top:8px">🚫 NÃO edite o modelo original — baixe e edite a cópia no seu computador</div>' +
+    '<div style="margin-top:16px;padding-top:16px;border-top:1px dashed rgba(0,0,0,0.1)">' +
+    '<a href="https://docs.google.com/document/d/1uPT18EqDdgok_FHHdblGhOq4e7q20Vy6/edit?usp=drive_link&ouid=100434113960140974359&rtpof=true&sd=true" target="_blank" style="display:inline-block;background:#4caf50;color:white;padding:10px 22px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;box-shadow:0 3px 10px rgba(76,175,80,0.3);transition:all 0.2s" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'none\'">📄 Baixar Modelo de Relatório Pedagógico Bimestral ↗</a>' +
+    '<div style="font-size:11px;color:#c62828;font-weight:600;margin-top:8px">🚫 NÃO edite o modelo original — baixe e edite a cópia no seu computador</div>' +
+    '</div>' +
     '</div>' +
 
     '<div style="display:flex;align-items:center;gap:16px;padding:20px;background:linear-gradient(135deg,#e3f2fd,#e8eaf6);border-bottom:2px solid #1976d2">' +
