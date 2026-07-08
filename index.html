@@ -2139,6 +2139,72 @@ let detailId = null;
 let editMode = false;
 let editingCell = null;
 let statModal = null;
+let entregasData = null;
+let entregasLoading = false;
+let entregasError = null;
+let entregasAttempted = false;
+const ENTREGAS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfHOjeVTYcuB2y2Pk5_bOQJRHbgruZbnVCke7N6boDndVVG-BUEsodwaN3QuI1GVCSgXU_axLO45X-/pub?gid=1442991815&single=true&output=csv';
+const ENTREGAS_FETCH_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(ENTREGAS_CSV_URL);
+
+function parseCSV(text) {
+  const rows = []; let row = []; let field = ''; let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], n = text[i+1];
+    if (inQuotes) {
+      if (c === '"' && n === '"') { field += '"'; i++; }
+      else if (c === '"') { inQuotes = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQuotes = true; }
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\r') { /* skip */ }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else { field += c; }
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(c => (c||'').trim() !== ''));
+}
+
+function findCol(headers, keywords) {
+  const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  for (let i = 0; i < headers.length; i++) {
+    const h = norm(headers[i]);
+    if (keywords.some(k => h.includes(k))) return i;
+  }
+  return -1;
+}
+
+function loadEntregas() {
+  if (entregasLoading || entregasAttempted) return;
+  entregasLoading = true; entregasAttempted = true; entregasError = null;
+  fetch(ENTREGAS_FETCH_URL).then(r => { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
+    .then(text => {
+      const rows = parseCSV(text);
+      if (!rows.length) { entregasData = []; entregasLoading = false; render(); return; }
+      const headers = rows[0];
+      const iAluno = findCol(headers, ['aluno','estudante']);
+      const iDisc = findCol(headers, ['disciplina','materia','matéria']);
+      const iProf = findCol(headers, ['professor','docente']);
+      const iDoc = findCol(headers, ['tipo de documento','documento']);
+      const iTime = findCol(headers, ['carimbo','data']);
+      const items = rows.slice(1).map(r => ({
+        aluno: iAluno>=0 ? (r[iAluno]||'').trim() : '',
+        disciplina: iDisc>=0 ? (r[iDisc]||'').trim() : '',
+        professor: iProf>=0 ? (r[iProf]||'').trim() : '',
+        documento: iDoc>=0 ? (r[iDoc]||'').trim() : '',
+        ts: iTime>=0 ? (r[iTime]||'').trim() : ''
+      })).filter(x => x.aluno);
+      items.reverse(); // most recent submissions first (form responses are appended in order)
+      entregasData = items; entregasLoading = false; render();
+    })
+    .catch(() => { entregasError = true; entregasLoading = false; render(); });
+}
+
+function retryEntregas() {
+  entregasAttempted = false; entregasError = null; entregasData = null;
+  loadEntregas(); render();
+}
 
 const KEY = 'mapao_ed_especial_2026';
 function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); toast('💾 Salvo!'); } catch(e) { toast('❌ Erro ao salvar'); } }
@@ -2212,7 +2278,7 @@ function render() {
       </div>
 
       <div class="tabs">
-        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega do PEI e Relatórios','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';return`<button class="tab ${activeTab===id?'active':''}" onclick="activeTab='${id}';render()" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
+        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega do PEI e Relatórios','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo','entregas:✅ Entregas Realizadas'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';const isEntregas=id==='entregas';const clickAction=isEntregas?"window.open('https://sites.google.com/view/guiaoespecial/test','_blank')":`activeTab='${id}';render()`;return`<button class="tab ${activeTab===id?'active':''}" onclick="${clickAction}" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
       </div>
 
       ${editMode?'<div class="edit-banner">✏️ <strong>Modo edição ativo</strong> — Clique em qualquer campo para editar. Clique no 📝 para abrir o painel de histórico. Tudo salva automaticamente.</div>':''}
@@ -2237,6 +2303,9 @@ function render() {
       </div>
       <div class="tab-content ${activeTab==='pei'?'active':''}">
         ${renderPei()}
+      </div>
+      <div class="tab-content ${activeTab==='entregas'?'active':''}">
+        ${renderEntregas()}
       </div>
       <div class="tab-content ${activeTab==='docs'?'active':''}">
         ${renderDocs()}
@@ -2475,6 +2544,16 @@ function renderAgenda() {
     '</div>' +
     '<div style="text-align:center;margin-top:12px">' +
     '<a href="https://calendar.google.com/calendar/u/0?cid=Y181MzkwZDQ4OWI0NzIyMWU0ZjBkMDhkN2I4ZTI0MzgxYTA3ZGMwZDRiZDkxMGMyZmVhZmNiYzgxNjRlOWExZGY3QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" target="_blank" style="font-size:13px;color:var(--accent);font-weight:600;text-decoration:none">➕ Adicionar esta agenda ao seu Google Calendar ↗</a>' +
+    '</div>';
+}
+
+function renderEntregas() {
+  var siteUrl = 'https://sites.google.com/view/guiaoespecial/test';
+  return '<div class="section-title"><h2>✅ Entregas Realizadas</h2></div>' +
+    '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px">Painel com o status de entrega do PEI e do Relatório por aluno, atualizado automaticamente conforme as respostas do formulário de envio.</p>' +
+    '<div style="text-align:center;padding:40px 20px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,0.04)">' +
+    '<a href="' + siteUrl + '" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#2e7d32,#4caf50);color:white;padding:16px 40px;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(46,125,50,0.35);transition:all 0.2s" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'none\'">✅ Abrir Painel de Entregas ↗</a>' +
+    '<p style="font-size:12px;color:var(--ink-soft);margin-top:14px">O painel abrirá em uma nova aba</p>' +
     '</div>';
 }
 
