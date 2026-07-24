@@ -2256,7 +2256,7 @@ function render() {
       </div>
 
       <div class="tabs">
-        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega do PEI e Relatórios','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo','entregas:✅ Entregas Realizadas'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';const isEntregas=id==='entregas';const clickAction=isEntregas?"window.open('https://sites.google.com/view/guiaoespecial/test','_blank')":`activeTab='${id}';render()`;return`<button class="tab ${activeTab===id?'active':''}" onclick="${clickAction}" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
+        ${['mapao:📋 Mapão','colab:🤝 Colaborativo','aee:🧩 AEE','aux:👩‍🏫 Auxiliares','pei:📝 Entrega do PEI e Relatórios','docs:📂 Documentação','agenda:📆 Agenda SEDUC','resumo:📊 Resumo','entregas:✅ Entregas Realizadas'].map(t=>{const[id,lb]=t.split(':');const isPei=id==='pei';const isEntregas=id==='entregas';const clickAction=isEntregas?"window.open('https://sites.google.com/view/guiaoespecial/entregas-realizadas','_blank')":`activeTab='${id}';render()`;return`<button class="tab ${activeTab===id?'active':''}" onclick="${clickAction}" style="${isPei&&activeTab!==id?'background:#fff3e0;color:#e65100;font-weight:700;border:2px solid #ff9800;':''}${isPei&&activeTab===id?'background:#e65100;color:white;box-shadow:0 2px 12px rgba(230,81,0,0.4);':''}">${lb}</button>`;}).join('')}
       </div>
 
       ${editMode?'<div class="edit-banner">✏️ <strong>Modo edição ativo</strong> — Clique em qualquer campo para editar. Clique no 📝 para abrir o painel de histórico. Tudo salva automaticamente.</div>':''}
@@ -2526,7 +2526,7 @@ function renderAgenda() {
 }
 
 function renderEntregas() {
-  var siteUrl = 'https://sites.google.com/view/guiaoespecial/test';
+  var siteUrl = 'https://sites.google.com/view/guiaoespecial/entregas-realizadas';
   return '<div class="section-title"><h2>✅ Entregas Realizadas</h2></div>' +
     '<p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px">Painel com o status de entrega do PEI e do Relatório por aluno, atualizado automaticamente conforme as respostas do formulário de envio.</p>' +
     '<div style="text-align:center;padding:40px 20px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,0.04)">' +
