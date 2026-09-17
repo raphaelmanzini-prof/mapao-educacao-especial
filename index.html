@@ -2233,9 +2233,20 @@ function filtered() {
   return data.filter(a => [a.n,a.ra,a.turma,a.def,a.aee,a.profAux,a.profColab,a.obs].some(v=>(v||'').toLowerCase().includes(q)));
 }
 
+function compareTurmas(a, b) {
+  const parse = t => {
+    const m = t.match(/^(\d+)[°ª]\s*(.*)$/);
+    if (!m) return { num: 999, rest: t };
+    return { num: parseInt(m[1], 10), rest: m[2].trim() };
+  };
+  const pa = parse(a), pb = parse(b);
+  if (pa.num !== pb.num) return pa.num - pb.num;
+  return pa.rest.localeCompare(pb.rest, 'pt-BR');
+}
+
 function turmasOf(list) {
   const m = {}; list.forEach(a => { if(!m[a.turma]) m[a.turma]=[]; m[a.turma].push(a); });
-  return Object.entries(m);
+  return Object.entries(m).sort((x, y) => compareTurmas(x[0], y[0]));
 }
 
 // ═══ RENDER ═══
@@ -2318,8 +2329,8 @@ function render() {
 
 function renderMapao(em, ef) {
   return [
-    {label:'📘 Ensino Médio',list:em,total:data.filter(a=>a.etapa==='EM').length},
-    {label:'📗 Ensino Fundamental',list:ef,total:data.filter(a=>a.etapa==='EF').length}
+    {label:'📗 Ensino Fundamental',list:ef,total:data.filter(a=>a.etapa==='EF').length},
+    {label:'📘 Ensino Médio',list:em,total:data.filter(a=>a.etapa==='EM').length}
   ].map(sec => `
     <div class="section-title"><h2>${sec.label}</h2><span class="badge b-cnt">${sec.total} alunos</span></div>
     ${turmasOf(sec.list).map(([turma, als]) => `
